@@ -39,6 +39,11 @@ from evidently.legacy.ui.components.base import Component as ComponentLegacy
 from evidently.legacy.ui.dashboards.base import DashboardPanel
 from evidently.legacy.utils.llm.prompts import PromptBlock
 from evidently.legacy.utils.llm.prompts import PromptTemplate
+from evidently.llm.optimization.optimizer import OptimizerConfig
+from evidently.llm.optimization.optimizer import OptimizerLog
+from evidently.llm.optimization.prompts import OptimizationScorer
+from evidently.llm.optimization.prompts import PromptExecutor
+from evidently.llm.optimization.prompts import PromptOptimizerStrategy
 from evidently.llm.prompts.content import PromptContent
 from evidently.pydantic_utils import TYPE_ALIASES
 from evidently.pydantic_utils import EvidentlyBaseModel
@@ -46,6 +51,7 @@ from evidently.pydantic_utils import PolymorphicModel
 from evidently.pydantic_utils import WithTestAndMetricDependencies
 from evidently.pydantic_utils import get_base_class
 from evidently.pydantic_utils import is_not_abstract
+from evidently.sdk.configs import ConfigContent
 from evidently.ui.service.components.base import Component
 
 T = TypeVar("T")
@@ -83,8 +89,6 @@ REGISTRY_MAPPING: Dict[Type[PolymorphicModel], str] = {
     MetricPreset: "evidently.legacy.metric_preset._registry",
     FeatureDescriptor: "evidently.legacy.descriptors._registry",
     GeneratedFeatures: "evidently.legacy.features._registry",
-    PromptBlock: "evidently.legacy.utils.llm._registry",
-    PromptTemplate: "evidently.legacy.utils.llm._registry",
     # new api
     MetricTest: registries.metric_tests.__name__,
     MetricV2: registries.metrics.__name__,
@@ -94,6 +98,15 @@ REGISTRY_MAPPING: Dict[Type[PolymorphicModel], str] = {
     Descriptor: registries.descriptors.__name__,
     ColumnCondition: registries.column_conditions.__name__,
     PromptContent: registries.prompts.__name__,
+    ConfigContent: registries.configs.__name__,
+    OptimizerConfig: registries.optimizers.__name__,
+    OptimizerLog: registries.optimizers.__name__,
+    OptimizationScorer: registries.optimizers.__name__,
+    PromptExecutor: registries.optimizers.__name__,
+    PromptOptimizerStrategy: registries.optimizers.__name__,
+    PromptBlock: registries.prompts.__name__,
+    PromptTemplate: registries.prompts.__name__,
+    BaseLLMPromptTemplate: registries.prompts.__name__,
 }
 
 
@@ -167,6 +180,12 @@ def test_all_aliases_correct():
         MetricContainer: MetricContainer.__alias_type__,
         ColumnCondition: ColumnCondition.__alias_type__,
         PromptContent: PromptContent.__alias_type__,
+        ConfigContent: ConfigContent.__alias_type__,
+        OptimizerConfig: OptimizerConfig.__alias_type__,
+        OptimizerLog: OptimizerLog.__alias_type__,
+        OptimizationScorer: OptimizationScorer.__alias_type__,
+        PromptExecutor: PromptExecutor.__alias_type__,
+        PromptOptimizerStrategy: PromptOptimizerStrategy.__alias_type__,
     }
     skip = [Component, ComponentLegacy]
     skip_literal = [EvidentlyBaseModel, WithTestAndMetricDependencies, BasePreset]

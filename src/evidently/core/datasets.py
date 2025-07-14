@@ -163,7 +163,17 @@ class RAG:
     pass
 
 
-LLMDefinition = Union[Completion, RAG]
+@dataclasses.dataclass
+class LLMClassification:
+    input: str
+    target: str
+    predictions: Optional[str] = None
+    reasoning: Optional[str] = None
+    prediction_reasoning: Optional[str] = None
+    name: str = "llm_default"
+
+
+LLMDefinition = Union[Completion, RAG, LLMClassification]
 
 
 DEFAULT_TRACE_LINK_COLUMN = "_evidently_trace_link"
@@ -387,9 +397,6 @@ class SingleInputDescriptor(Descriptor, abc.ABC):
 
     def list_input_columns(self) -> List[str]:
         return [self.column]
-
-
-Descriptor.update_forward_refs()
 
 
 class ColumnTest(SingleInputDescriptor):
